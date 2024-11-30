@@ -6,6 +6,8 @@ import {
   getAllUsers,
   getUserById,
   updateUser,
+  userBorrowBook,
+  userReturnBook,
 } from "../controllers/userController";
 import { validationMiddleware } from "../middlewares/validationMiddleware";
 
@@ -27,5 +29,7 @@ router.get("/", getAllUsers);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
+router.post("/:userId/borrow/:bookId", userBorrowBook);
+router.post("/:userId/return/:bookId", userReturnBook);
 
 export default router;

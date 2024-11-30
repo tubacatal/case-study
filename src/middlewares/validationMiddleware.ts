@@ -14,7 +14,6 @@ export const validationMiddleware = (
       message: "Validation failed",
       errors: errors.array(),
     });
-    console.log(resp, typeof resp);
     return resp;
   }
 

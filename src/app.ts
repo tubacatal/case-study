@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import bookRoutes from "./routes/bookRoutes";
 import userRoutes from "./routes/userRoutes";
 import { syncDatabase } from "./utils/db";
 
@@ -9,9 +10,9 @@ const app = express();
 
 app.use(express.json());
 
-
 // routes
 app.use("/users", userRoutes);
+app.use("/books", bookRoutes);
 
 // database
 syncDatabase();
