@@ -127,7 +127,8 @@ export const userBorrowBook = async (
 
     if (isBookAvailable) {
       const borrowedBook = await borrowBookService(userId, bookId);
-      res.status(201).json(borrowedBook);
+      // console.log(borrowedBook);
+      res.sendStatus(204);
     } else {
       return res.status(400).json({ message: "Book is not available" });
     }
@@ -167,8 +168,14 @@ export const userReturnBook = async (
     const isBookReturnable = await isBookReturnableService(userId, bookId);
 
     if (isBookReturnable) {
-      const returnedBook = await returnBookService(userId, bookId);
-      res.status(201).json(returnedBook);
+      const score = Number(req.body.score);
+      if (isNaN(score)) {
+        return res.status(400).json({ message: "Invalid score" });
+      } else {
+        const returnedBook = await returnBookService(userId, bookId, score);
+        // console.log(returnedBook);
+        res.sendStatus(204);
+      }
     } else {
       return res.status(400).json({ message: "Book cannot be returned" });
     }
