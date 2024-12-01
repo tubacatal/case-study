@@ -30,6 +30,13 @@ router.get("/:id", getUserById);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 router.post("/:userId/borrow/:bookId", userBorrowBook);
-router.post("/:userId/return/:bookId", userReturnBook);
+router.post("/:userId/return/:bookId", [
+  check("score")
+    .isInt()
+    .withMessage("Score must be an integer")
+    .notEmpty()
+    .withMessage("Score is required"),
+],
+validationMiddleware,userReturnBook);
 
 export default router;
