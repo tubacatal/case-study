@@ -38,17 +38,17 @@ Book.init(
 );
 
 Book.hasMany(BookHistory, {
-  foreignKey: "id",
+  foreignKey: "book_id",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-BookHistory.belongsTo(Book, { foreignKey: "book_id", targetKey: "id" });
+BookHistory.belongsTo(Book, { foreignKey: "book_id" });
 
 Book.hasMany(Rating, {
-  foreignKey: "id",
+  foreignKey: "book_id",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-Rating.belongsTo(Book, { foreignKey: "book_id", targetKey: "id" });
+Rating.belongsTo(Book, { foreignKey: "book_id" });
 
 export default Book;

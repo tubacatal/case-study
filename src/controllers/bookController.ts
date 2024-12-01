@@ -5,6 +5,7 @@ import {
   getBookByIdService,
   updateBookService,
   deleteBookService,
+  getBookByIdWithRatingsService,
 } from "../services/bookService";
 
 export const createBook = async (req: Request, res: Response) => {
@@ -37,7 +38,7 @@ export const getBookById = async (
       return res.status(400).json({ message: "Invalid book ID" });
     }
 
-    const book = await getBookByIdService(bookId);
+    const book = await getBookByIdWithRatingsService(bookId);
 
     if (!book) {
       return res.status(404).json({ message: "Book not found" });

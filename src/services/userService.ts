@@ -1,4 +1,3 @@
-import { Op } from "sequelize";
 import BookHistory from "../models/bookHistoryModel";
 import Book from "../models/bookModel";
 import Rating from "../models/ratingModel";
@@ -22,54 +21,34 @@ export const getUserByIdService = async (id: number) => {
 };
 
 export const getUserByIdWithHistoryService = async (id: number) => {
-  const user = (await User.findOne({
+  const user = await User.findOne({
     where: { id },
     attributes: ["id", "name"],
     include: [
       {
         model: BookHistory,
+        required: false,
         where: {
           status: ["returned", "borrowed"],
         },
-        attributes: ["book_id", "status"],
+        attributes: ["status"],
         include: [
           {
             model: Book,
+            required: true,
             attributes: ["name"],
+            include: [
+              {
+                model: Rating,
+                required: false,
+                where: {
+                  user_id: id,
+                },
+                attributes: ["score"],
+              },
+            ],
           },
         ],
-      },
-    ],
-  })) as any;
-
-  console.log("USERRRRRRR---->", user);
-
-  /* const present = user.BookHistory.filter(
-    (history: { status: string; }) => history.status === "borrowed"
-  );
-  const past = user.BookHistory.filter(
-    (history: { status: string; }) => history.status === "returned"
-  ); */
-
-  /* console.log(present);
-  console.log(past); */
-
-  const pastBooksWithRatings = await BookHistory.findAll({
-    where: {
-      user_id: id,
-      status: "returned",
-    },
-    include: [
-      {
-        model: Book,
-        attributes: ["name"],
-      },
-      {
-        model: Rating,
-        where: {
-          book_id: { [Op.col]: "BookHistory.book_id" },
-        },
-        attributes: ["score"],
       },
     ],
   });

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Rating from "../models/ratingModel";
 import {
   borrowBookService,
   getBookByIdService,
@@ -51,7 +52,41 @@ export const getUserById = async (
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json(user);
+    const presentHistory = (user as any)?.BookHistories.filter(
+      (history: { status: string }) => history.status === "borrowed"
+    ).map((history: { status: string }) => {
+      return {
+        name: (history as any)?.Book.name,
+      };
+    });
+
+    const pastHistory = (user as any)?.BookHistories.filter(
+      (history: { status: string }) => history.status === "returned"
+    ).map((history: { status: string }) => {
+      return {
+        name: (history as any)?.Book.name,
+        userScore:
+          (history as any)?.Book?.Ratings?.map(
+            (rating: Rating) => rating?.score
+          ).reduce(
+            (acc: number, currentValue: number) => acc + currentValue,
+            0
+          ) / (history as any)?.Book?.Ratings.length,
+      };
+    });
+
+    return res.status(200).json({
+      id: user.id,
+      name: user.name,
+      books: {
+        past: [
+          ...new Map(
+            pastHistory.map((history: any) => [history.name, history])
+          ).values(),
+        ],
+        present: presentHistory,
+      },
+    });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

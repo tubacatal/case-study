@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/db";
-import User from "./userModel";
 
 // Define the BorrowedBook model
 class BookHistory extends Model {

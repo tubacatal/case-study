@@ -48,6 +48,31 @@ export const getBookByIdService = async (id: number) => {
   return book;
 };
 
+export const getBookByIdWithRatingsService = async (
+  bookId: number,
+  userId?: number
+) => {
+  let whereCondition: any = { book_id: bookId };
+  userId ? whereCondition.user_id = userId : null;
+
+  console.log(whereCondition);
+
+  const book = await Book.findOne({
+    where: { id: bookId },
+    include: [
+      {
+        model: Rating,
+        where: whereCondition,
+        attributes: ["score"],
+      },
+    ],
+  });
+
+  console.log(book);
+
+  return book;
+};
+
 export const isBookAvailableService = async (bookId: number) => {
   const borrowedBook = await BookHistory.findAll({
     where: {

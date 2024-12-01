@@ -1,7 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/db";
 import BookHistory from "./bookHistoryModel";
-import Book from "./bookModel";
 import Rating from "./ratingModel";
 
 class User extends Model {
@@ -39,17 +38,17 @@ User.init(
 );
 
 User.hasMany(BookHistory, {
-  foreignKey: "id",
+  foreignKey: "user_id",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-BookHistory.belongsTo(User, { foreignKey: "user_id", targetKey: "id" });
+BookHistory.belongsTo(User, { foreignKey: "user_id" });
 
 User.hasMany(Rating, {
-  foreignKey: "id",
+  foreignKey: "user_id",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-Rating.belongsTo(User, { foreignKey: "user_id", targetKey: "id" });
+Rating.belongsTo(User, { foreignKey: "user_id" });
 
 export default User;
