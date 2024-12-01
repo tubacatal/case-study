@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
+import Rating from "../models/ratingModel";
 import {
   createBookService,
+  deleteBookService,
   getAllBooksService,
   getBookByIdService,
-  updateBookService,
-  deleteBookService,
   getBookByIdWithRatingsService,
+  updateBookService,
 } from "../services/bookService";
 
 export const createBook = async (req: Request, res: Response) => {
@@ -44,7 +45,15 @@ export const getBookById = async (
       return res.status(404).json({ message: "Book not found" });
     }
 
-    return res.status(200).json(book);
+    return res.status(200).json({
+      id: book.id,
+      name: book.name,
+      score:
+        (book as any)?.Ratings?.map((rating: Rating) => rating?.score).reduce(
+          (acc: number, currentValue: number) => acc + currentValue,
+          0
+        ) / (book as any)?.Ratings.length || -1,
+    });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

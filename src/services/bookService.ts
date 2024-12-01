@@ -55,20 +55,17 @@ export const getBookByIdWithRatingsService = async (
   let whereCondition: any = { book_id: bookId };
   userId ? whereCondition.user_id = userId : null;
 
-  console.log(whereCondition);
-
   const book = await Book.findOne({
     where: { id: bookId },
     include: [
       {
         model: Rating,
         where: whereCondition,
+        required: false,
         attributes: ["score"],
       },
     ],
   });
-
-  console.log(book);
 
   return book;
 };
